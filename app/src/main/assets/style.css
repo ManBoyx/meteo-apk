@@ -1,0 +1,532 @@
+:root {
+  --fond: #f1f4f8;
+  --surface: #ffffff;
+  --texte: #16202b;
+  --texte2: #5b6876;
+  --trait: #e2e7ed;
+  --accent: #1c66c4;
+  --sur-accent: #ffffff;
+  --alerte-fond: #fff1cf;
+  --alerte-texte: #614400;
+
+  --i-soleil: #f5a623;
+  --i-nuage: #a3b1bf;
+  --i-lune: #d3ad3e;
+  --i-pluie: #2f86e0;
+  --i-neige: #7db4e6;
+  --i-eclair: #eda600;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #0e1319;
+    --surface: #182029;
+    --texte: #eef2f6;
+    --texte2: #9aa7b4;
+    --trait: #27323f;
+    --accent: #74b4f7;
+    --sur-accent: #0b1622;
+    --alerte-fond: #3a2e10;
+    --alerte-texte: #ffd98a;
+
+    --i-soleil: #ffc145;
+    --i-nuage: #c3cdd8;
+    --i-lune: #f0d27a;
+    --i-pluie: #6ab0f5;
+    --i-neige: #b9dcf7;
+    --i-eclair: #ffc93c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0 16px 24px;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, p, ol, ul { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+
+button, input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.barre, #contenu {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ---- Barre du haut ---- */
+
+.barre {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  background: var(--fond);
+}
+
+.champ-faux {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid var(--trait);
+  border-radius: 23px;
+  background: var(--surface);
+  color: var(--texte2);
+  text-align: left;
+}
+
+.champ-faux span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rond {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.rond:active, .champ-faux:active { opacity: 0.6; }
+
+@media (hover: hover) {
+  .rond:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+}
+
+.picto {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.en-cours [data-action="actualiser"] .picto { animation: tourne 0.9s linear infinite; }
+
+@keyframes tourne { to { transform: rotate(360deg); } }
+
+/* ---- Icônes météo ---- */
+
+.ic { flex: none; width: 30px; height: 30px; }
+.i-soleil { fill: var(--i-soleil); }
+.i-nuage { fill: var(--i-nuage); }
+.i-lune { fill: var(--i-lune); }
+.i-neige { fill: var(--i-neige); }
+.i-eclair { fill: var(--i-eclair); }
+.i-rayons, .i-pluie, .i-brume {
+  fill: none;
+  stroke-linecap: round;
+}
+.i-rayons { stroke: var(--i-soleil); stroke-width: 3; }
+.i-pluie { stroke: var(--i-pluie); stroke-width: 2.8; }
+.i-brume { stroke: var(--i-nuage); stroke-width: 3; }
+
+/* ---- Contenu ---- */
+
+#contenu {
+  display: grid;
+  gap: 12px;
+}
+
+.bandeau {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--alerte-fond);
+  color: var(--alerte-texte);
+  font-size: 0.92rem;
+}
+
+/* Carte principale : le fond suit l'état du ciel, le texte reste blanc. */
+.ciel {
+  --i-soleil: #ffd24a;
+  --i-nuage: #f2f6fa;
+  --i-lune: #ffe9a6;
+  --i-pluie: #cfe6ff;
+  --i-neige: #ffffff;
+  --i-eclair: #ffd24a;
+  padding: 16px 16px 26px 20px;
+  border-radius: 28px;
+  color: #ffffff;
+  background: linear-gradient(160deg, #4a5a6b, #64758a);
+}
+
+.ciel-jour { background: linear-gradient(160deg, #1552a8, #2b78c8); }
+.ciel-nuit { background: linear-gradient(160deg, #0f1b3d, #2b3972); }
+.ciel-gris { background: linear-gradient(160deg, #4a5a6b, #64758a); }
+.ciel-pluie { background: linear-gradient(160deg, #2c4155, #4a667e); }
+.ciel-neige { background: linear-gradient(160deg, #46627f, #6583a0); }
+.ciel-orage { background: linear-gradient(160deg, #26263f, #4a4468); }
+
+.lieu {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.lieu-texte {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.region {
+  margin-top: 2px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.etoile[aria-pressed="true"] .picto {
+  fill: #ffd24a;
+  stroke: #ffd24a;
+}
+
+.actuel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.actuel .ic {
+  width: 92px;
+  height: 92px;
+}
+
+.temp {
+  font-size: clamp(4.5rem, 22vw, 6.5rem);
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.etat, .ressenti {
+  padding-right: 4px;
+  text-align: center;
+}
+
+.etat {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.ressenti {
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+.attente .etat { margin-top: 48px; padding-bottom: 28px; }
+
+/* ---- Tuiles ---- */
+
+.tuiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .tuiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.tuile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 8px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.t-picto { display: grid; color: var(--accent); }
+.t-picto .picto { width: 20px; height: 20px; }
+.t-nom { font-size: 0.88rem; color: var(--texte2); }
+.t-val, .t-sous { grid-column: 1 / -1; }
+.t-val { margin-top: 8px; font-size: 1.4rem; font-weight: 650; line-height: 1.2; }
+.t-sous { font-size: 0.88rem; color: var(--texte2); }
+
+/* ---- Cartes ---- */
+
+.carte {
+  min-width: 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+h2 {
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--texte2);
+}
+
+.heures {
+  display: flex;
+  gap: 2px;
+  margin: 10px -6px 0;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.heure {
+  flex: none;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+}
+
+.h-heure { font-size: 0.88rem; color: var(--texte2); }
+.h-temp { font-size: 1.05rem; font-weight: 650; }
+.h-pluie { font-size: 0.8rem; color: var(--accent); }
+
+.jours { margin-top: 4px; }
+
+.jour {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1fr) 28px 2.7rem 2.2rem minmax(30px, 1.3fr) 2.2rem;
+  align-items: center;
+  column-gap: 6px;
+  min-height: 48px;
+  border-top: 1px solid var(--trait);
+}
+
+.jour:first-child { border-top: 0; }
+
+/* Très petit écran : la barre des températures laisse sa place aux chiffres. */
+@media (max-width: 379px) {
+  .carte { padding: 14px 12px; }
+  .jour { grid-template-columns: minmax(0, 1fr) 28px 2.7rem 2.2rem 2.2rem; }
+  .j-barre { display: none; }
+}
+
+.j-nom { white-space: nowrap; }
+.j-nom::first-letter { text-transform: uppercase; }
+.j-icone { display: grid; }
+.j-icone .ic { width: 28px; height: 28px; }
+.j-pluie { font-size: 0.8rem; color: var(--accent); text-align: right; }
+.j-min { color: var(--texte2); text-align: right; }
+.j-max { font-weight: 650; text-align: right; }
+
+.j-barre {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--trait);
+}
+
+.j-barre i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #58a6ee, #f5a623);
+}
+
+/* ---- Erreur ---- */
+
+.erreur {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.erreur p { color: var(--texte2); }
+
+.bouton {
+  min-height: 46px;
+  margin-top: 6px;
+  padding: 0 24px;
+  border-radius: 23px;
+  background: var(--accent);
+  color: var(--sur-accent);
+  font-weight: 650;
+}
+
+/* ---- Pied de page ---- */
+
+.pied {
+  padding: 8px 4px 0;
+  color: var(--texte2);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.pied a { color: inherit; }
+.pied-maj { display: block; margin-top: 2px; }
+
+/* ---- Message bref ---- */
+
+.annonce {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 5;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 11px 18px;
+  border-radius: 16px;
+  background: var(--texte);
+  color: var(--fond);
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.annonce[hidden] { display: none; }
+
+/* ---- Panneau de recherche ---- */
+
+dialog {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--fond);
+  color: var(--texte);
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+
+.panneau {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.p-tete {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px 10px 8px;
+}
+
+#champ {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--trait);
+  border-radius: 23px;
+  background: var(--surface);
+  font-size: 1rem;
+}
+
+#champ::placeholder { color: var(--texte2); }
+#champ:focus-visible { outline-offset: -1px; }
+
+.p-liste {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 16px 20px;
+  overflow-y: auto;
+}
+
+.p-liste h2 { padding: 8px 4px; }
+
+.villes li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-top: 1px solid var(--trait);
+}
+
+.villes li:first-child { border-top: 0; }
+
+.ville {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 4px;
+  text-align: left;
+}
+
+.v-nom { font-weight: 650; overflow-wrap: anywhere; }
+.v-lieu { font-size: 0.88rem; color: var(--texte2); overflow-wrap: anywhere; }
+
+.vide {
+  padding: 24px 4px;
+  color: var(--texte2);
+}
+
+@media (min-width: 640px) {
+  dialog {
+    width: 520px;
+    height: fit-content;
+    max-height: min(640px, 84vh);
+    margin: 8vh auto auto;
+    border-radius: 24px;
+  }
+
+  .panneau { height: auto; max-height: min(640px, 84vh); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .en-cours [data-action="actualiser"] .picto { animation: none; }
+}

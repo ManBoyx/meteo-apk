@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light dark">
+  <title>Météo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="barre">
+    <button type="button" class="champ-faux" data-action="ouvrir-recherche">
+      <svg class="picto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Rechercher une ville</span>
+    </button>
+    <button type="button" class="rond" data-action="position" aria-label="Ma position">
+      <svg class="picto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11l19-9-9 19-2-8z"/></svg>
+    </button>
+    <button type="button" class="rond" data-action="actualiser" aria-label="Actualiser">
+      <svg class="picto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    </button>
+  </header>
+
+  <main id="contenu"></main>
+
+  <p id="annonce" class="annonce" role="status" hidden></p>
+
+  <dialog id="recherche" aria-label="Rechercher une ville">
+    <div class="panneau">
+      <form id="formulaire" class="p-tete">
+        <button type="button" class="rond" data-action="fermer-recherche" aria-label="Fermer la recherche">
+          <svg class="picto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <input id="champ" type="search" placeholder="Rechercher une ville" aria-label="Nom de la ville"
+               autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="search">
+      </form>
+      <div id="liste" class="p-liste"></div>
+    </div>
+  </dialog>
+
+  <script src="js/meteo.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/stockage.js"></script>
+  <script src="js/vue.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
