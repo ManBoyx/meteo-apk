@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+// La clé de signature vit dans signature/ (hors git). Sans elle, l'APK de
+// version n'est pas signé.
+def fichierCle = rootProject.file('signature/cle.properties')
+def cle = new Properties()
+if (fichierCle.exists()) {
+    fichierCle.withInputStream { cle.load(it) }
+}
+
+android {
+    namespace 'fr.manboyx.meteo'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'fr.manboyx.meteo'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '1.0'
+    }
+
+    signingConfigs {
+        diffusion {
+            if (fichierCle.exists()) {
+                storeFile rootProject.file('signature/meteo.jks')
+                storePassword cle['motDePasse']
+                keyAlias 'meteo'
+                keyPassword cle['motDePasse']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (fichierCle.exists()) {
+                signingConfig signingConfigs.diffusion
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        checkReleaseBuilds false
+    }
+
+    // Bloc destiné au Play Store, inutile pour un APK installé à la main.
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Même valeur que la variable « fond » de assets/style.css. -->
+    <color name="fond">#F1F4F8</color>
+    <color name="icone_fond">#1C66C4</color>
+    <!-- Android 8.0 ne sait pas assombrir les boutons de navigation : barre noire. -->
+    <color name="barre_navigation">#000000</color>
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Vrai en thème clair : les icônes des barres système sont alors sombres. -->
+    <bool name="barres_claires">true</bool>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.Meteo" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fond</item>
+        <item name="android:statusBarColor">@color/fond</item>
+        <item name="android:navigationBarColor">@color/barre_navigation</item>
+        <item name="android:windowLightStatusBar">@bool/barres_claires</item>
+        <item name="android:colorAccent">@color/icone_fond</item>
+    </style>
+
+    <style name="Theme.Meteo" parent="Base.Theme.Meteo" />
+</resources>

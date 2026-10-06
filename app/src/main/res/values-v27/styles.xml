@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Les boutons de navigation sombres n'existent qu'à partir d'Android 8.1. -->
+    <style name="Theme.Meteo" parent="Base.Theme.Meteo">
+        <item name="android:windowLightNavigationBar">@bool/barres_claires</item>
+    </style>
+</resources>
